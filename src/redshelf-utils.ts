@@ -10,7 +10,7 @@ function main() {
         return
     }
 
-    const INITIAL_TEXT = `Click on an image to open it in a new tab! (click on this text to quit)`
+    const INITIAL_TEXT = "Click on an image to open it in a new tab! You can also click on a paragraph to copy the paragraph. You can also click on this text to deactivate these behaviors."
 
     const notifier = document.createElement("span")
     notifier.style.position = "fixed"
@@ -20,20 +20,32 @@ function main() {
     notifier.style.background = "white"
     notifier.style.fontSize = "1rem"
     notifier.style.zIndex = "99999"
+    notifier.style.maxWidth = "40vw"
     notifier.innerText = INITIAL_TEXT
     document.body.append(notifier)
 
     const docWindow = activeDoc.contentWindow
     const clickHandler = (e: MouseEvent) => {
-        const img = docWindow.document.elementFromPoint(e.clientX, e.clientY)
-        if (!img || !("currentSrc" in img)) {
-            notifier.innerText = "No image selected!"
+        const target = docWindow.document.elementFromPoint(e.clientX, e.clientY)
+        if (!target) {
+            return
+        }
+        if ("currentSrc" in target) {
+            window.open(target.currentSrc as string, "_blank")
+            return
+        }
+        if ("innerText" in target) {
+            navigator.clipboard.writeText(target.innerText as string)
+            notifier.innerText = "Copied!"
             setTimeout(() => {
                 notifier.innerText = INITIAL_TEXT
             }, 1000)
             return
         }
-        window.open(img.currentSrc as string, "_blank")
+        notifier.innerText = "Not a text or image element!"
+        setTimeout(() => {
+            notifier.innerText = INITIAL_TEXT
+        }, 1000)
     }
     docWindow.addEventListener("click", clickHandler)
 
