@@ -8,6 +8,8 @@ to install a bookmarklet, just copy the source code from a javascript program yo
 
 the instructions on how to use each bookmark is contained within a comment at the top their readable source code in the [src](src/) directory. however in general, most bookmarks will work if you click on them on the correct webpage.
 
+> note: on iOS, you'll have to create a temporary bookmark on any random site, then edit the bookmark to include the bookmarklet's source code.
+
 ### building
 
 to build all the bookmarklets, run `bun run build`.
